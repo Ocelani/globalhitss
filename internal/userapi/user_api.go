@@ -27,15 +27,13 @@ func (a *UserAPI) Setup() {
 	a.Server.Use(logger.New(logger.ConfigDefault))
 
 	a.Server.Use(cors.New(cors.Config{
-		AllowHeaders:     "Origin, Content-Type, Accept, X-Auth",
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
-		AllowOrigins:     "*",
-		AllowCredentials: true,
+		AllowHeaders: "Origin, Content-Type, Accept, X-Auth",
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
 	}))
 
 	a.Server.Get("/", func(http fiber.Ctx) error {
 		http.Accepts("application/json", "text/html", "html", "text", "json")
-		return http.SendString("Backend Challenge - Global Hitss")
+		return http.SendString("Backend Challenge - Global Hitss\nAPI User Service\n")
 	})
 
 	a.user.routes(a)

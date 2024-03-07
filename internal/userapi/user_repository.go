@@ -12,15 +12,10 @@ type UserRepository struct{ DB *database.Postgres }
 
 // NewUserRepository instantiates a new UserRepository object.
 func NewUserRepository(db *database.Postgres) *UserRepository {
-	type usr struct {
-		ID uint `gorm:"primarykey"`
-		user.User
-	}
-	u := usr{}
-	if err := db.Model(&u).AutoMigrate(&u); err != nil {
+	u := &User{}
+	if err := db.Model(u).AutoMigrate(u); err != nil {
 		panic(err)
 	}
-
 	return &UserRepository{db}
 }
 
