@@ -11,14 +11,12 @@ import (
 // API is the implementation of the repository interface.
 type API struct {
 	Server *fiber.App
-	user   *User
 }
 
 // NewAPI returns a new instance of the default repository.
 func NewAPI() *API {
 	return &API{
 		Server: fiber.New(),
-		user:   NewUser(),
 	}
 }
 
@@ -37,19 +35,18 @@ func (a *API) Setup() {
 		http.Accepts("application/json", "text/html", "html", "text", "json")
 		return http.SendString("Backend Challenge - Global Hitss")
 	})
-
-	a.user.routes(a)
 }
 
 // Listen and serve the API service.
 func (a *API) Listen(port string) error {
+	defer a.close()
 	return a.Server.Listen(
 		fmt.Sprintf(":%s", port),
 	)
 }
 
-// Close API service.
-func (a *API) Close() {
+// close API service.
+func (a *API) close() {
 	if err := a.Server.Shutdown(); err != nil {
 		panic(err)
 	}

@@ -10,7 +10,7 @@ import (
 func TestPostgresConnector_String(t *testing.T) {
 	want := "host=Host port=5432 user=User password=Password dbname=NameDB sslmode=disable timezone=Timezone"
 
-	conn := &PostgresConnector{
+	conn := &Postgres{
 		Host:          "Host",
 		Port:          5432,
 		User:          "User",

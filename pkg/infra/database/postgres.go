@@ -16,12 +16,9 @@ const (
 	maxOpenConns    = 200
 )
 
-// Postgres is used on database operations.
-type Postgres struct{ *gorm.DB }
-
-// PostgresConnector is the implementation
-// that uses the PostgresConnector repository.
-type PostgresConnector struct {
+// Postgres is the implementation
+// that uses the Postgres repository.
+type Postgres struct {
 	Host          string
 	Port          int
 	User          string
@@ -31,13 +28,14 @@ type PostgresConnector struct {
 	Timezone      string
 	Timeout       time.Duration
 	RetryInterval time.Duration
+	*gorm.DB
 }
 
 // String returns the connection string.
-func (c *PostgresConnector) String() string {
+func (p *Postgres) String() string {
 	var ssl string
 
-	if c.SSL {
+	if p.SSL {
 		ssl = "enable"
 	} else {
 		ssl = "disable"
@@ -45,31 +43,31 @@ func (c *PostgresConnector) String() string {
 
 	return fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s timezone=%s",
-		c.Host, c.Port, c.User, c.Password, c.NameDB, ssl, c.Timezone,
+		p.Host, p.Port, p.User, p.Password, p.NameDB, ssl, p.Timezone,
 	)
 }
 
-// ConnectDB returns the database connection.
-func (c *PostgresConnector) ConnectDB() (*Postgres, error) {
-	pg := postgres.Open(c.String())
+// Open returns the database connection.
+func (p *Postgres) Open() error {
+	pg := postgres.Open(p.String())
 
 	gormDB, err := gorm.Open(pg, &gorm.Config{
 		PrepareStmt:            true,
 		SkipDefaultTransaction: true,
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	if err = c.configConn(gormDB); err != nil {
-		return nil, err
+	if err = p.configConn(gormDB); err != nil {
+		return err
 	}
+	p.DB = gormDB
 
-	return &Postgres{gormDB}, nil
+	return nil
 }
 
 // configConn configures the database resolver.
-func (c *PostgresConnector) configConn(db *gorm.DB) error {
+func (p *Postgres) configConn(db *gorm.DB) error {
 	sql, err := db.DB()
 	if err != nil {
 		return err
