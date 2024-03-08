@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/gofiber/fiber/v3 v3.0.0-20240307152329-3b982aa3f62e
+	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7

@@ -13,7 +13,7 @@ type User struct {
 	Nome       string
 	Sobrenome  string
 	Contato    string
-	Endereço   string
+	Endereco   string
 	Nascimento string
 	CPF        string
 }
