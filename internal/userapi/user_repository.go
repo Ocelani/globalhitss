@@ -25,16 +25,18 @@ func (r *UserRepository) Create(ctx context.Context, data *user.User) error {
 }
 
 // ReadOne user registered on the database.
-func (r *UserRepository) ReadOne(ctx context.Context, data *user.User) error {
-	return r.DB.First(data).Error
+func (r *UserRepository) ReadOne(ctx context.Context, id user.ID) (*user.User, error) {
+	data := &User{ID: uint(id)}
+	err := r.DB.First(data).Error
+	return toUserEntity(*data), err
 }
 
 // Update data on PostgreSQL database.
-func (r *UserRepository) Update(ctx context.Context, where, data *user.User) error {
-	return r.DB.Model(where).Updates(data).Error
+func (r *UserRepository) Update(ctx context.Context, data *user.User) error {
+	return r.DB.Save(data).Error
 }
 
 // Delete data on PostgreSQL database.
-func (r *UserRepository) Delete(ctx context.Context, data *user.User) error {
-	return r.DB.Delete(data).Error
+func (r *UserRepository) Delete(ctx context.Context, id user.ID) error {
+	return r.DB.Delete(&User{}, id).Error
 }

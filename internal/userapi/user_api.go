@@ -42,9 +42,7 @@ func (a *UserAPI) Setup() {
 // Listen and serve the API service.
 func (a *UserAPI) Listen(port string) error {
 	defer a.close()
-	return a.Server.Listen(
-		fmt.Sprintf(":%s", port),
-	)
+	return a.Server.Listen(fmt.Sprintf(":%s", port))
 }
 
 // close API service.

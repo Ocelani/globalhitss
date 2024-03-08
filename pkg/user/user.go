@@ -4,8 +4,10 @@ import (
 	"context"
 )
 
+// ID is the type of the user ID.
 type ID uint
 
+// User is the model of the user entity.
 type User struct {
 	ID         ID
 	Nome       string
@@ -19,15 +21,15 @@ type User struct {
 // Repository is the interface that wraps the methods of the User repository.
 type Repository interface {
 	Create(context.Context, *User) error
-	ReadOne(context.Context, *User) error
-	Update(ctx context.Context, where, update *User) error
-	Delete(context.Context, *User) error
+	ReadOne(context.Context, ID) (*User, error)
+	Update(context.Context, *User) error
+	Delete(context.Context, ID) error
 }
 
 // Service is the interface that wraps the methods of the User service.
 type Service interface {
 	Register(context.Context, *User) error
-	FindOne(context.Context, *User) error
-	Update(ctx context.Context, where, update *User) error
-	Remove(context.Context, *User) error
+	FindOne(context.Context, ID) (*User, error)
+	Update(context.Context, ID, *User) error
+	Remove(context.Context, ID) error
 }

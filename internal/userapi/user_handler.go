@@ -1,7 +1,10 @@
 package userapi
 
 import (
+	"encoding/json"
+	"globalhitss/pkg/user"
 	"net/http"
+	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -33,20 +36,67 @@ func (h *UserHandler) routes(api *UserAPI) {
 
 // Get returns a user by ID.
 func (h *UserHandler) Get(c fiber.Ctx) error {
-	return c.Status(http.StatusOK).SendString("get user")
+	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	data, err := h.Service.ReadOne(c.Context(), user.ID(id))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	return c.Status(http.StatusOK).JSON(toResponse(data))
 }
 
 // Post creates a new user.
 func (h *UserHandler) Post(c fiber.Ctx) error {
-	return c.Status(http.StatusOK).SendString("post user")
+	var dto User
+	if err := json.Unmarshal(c.Body(), &dto); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	ent := toUserEntity(dto)
+	if err := h.Service.Create(c.Context(), ent); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	return c.Status(http.StatusOK).JSON(toResponse(ent))
 }
 
 // Put updates a user by ID.
 func (h *UserHandler) Put(c fiber.Ctx) error {
-	return c.Status(http.StatusOK).SendString("put user")
+	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	var dto User
+	if err := json.Unmarshal(c.Body(), &dto); err != nil {
+		_ = c.Status(http.StatusBadRequest).JSON(bindBodyError(err))
+		return err
+	}
+
+	ent := toUserEntity(dto)
+	if err := h.Service.Update(c.Context(), user.ID(id), ent); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	return c.Status(http.StatusOK).JSON(toResponse(ent))
 }
 
 // Delete deletes a user by ID.
 func (h *UserHandler) Delete(c fiber.Ctx) error {
-	return c.Status(http.StatusOK).SendString("delete user")
+	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	if err = h.Service.Delete(c.Context(), user.ID(id)); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(userHandlerError(err))
+	}
+
+	return c.Status(http.StatusOK).JSON(User{
+		ID: uint(id),
+	})
 }
