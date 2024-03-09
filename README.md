@@ -1,6 +1,4 @@
-# GLOBAL HITSS - TESTE DE CONHECIMENTO TÉCNICO
-
-## User API com RabbitMQ
+# User API com RabbitMQ
 
 Uma API RESTful CRUD em Golang, utilizando um banco de dados Postgres e a RabbitMQ para processamento assíncrono de inserções de registros relacionados a dados pessoais de clientes.
 
