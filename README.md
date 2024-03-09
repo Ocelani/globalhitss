@@ -94,3 +94,8 @@ docker compose up -d
 go mod tidy
 go run ./cmd/userapi
 ```
+
+As credenciais de conexão estão escritas diretamente no código.
+Compreendo que idealmente deveriam ser atribuídas através de variáveis de ambiente.
+
+### Grato!
