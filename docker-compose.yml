@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  # userapi:
+  #   image: userapi:latest
+  #   container_name: userapi
+  #   environment:
+  #     DATABASE_HOST: db
+  #     DATABASE_PORT: 5432
+  #     DATABASE_NAME: "globalhitss"
+  #     DATABASE_USER: "postgres"
+  #     DATABASE_PASS: "password123"
+  #     DATABASE_SSL: "false"
+  #     DATABASE_TZ: "America/Sao_Paulo"
+  #   ports:
+  #     - "127.0.0.1::4443"
+  #   depends_on:
+  #     - rabbitmq
+  #     - db
+  #   networks:
+  #     - userapi-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+    expose:
+      - "5432"
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - userapi-network
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_DB: "globalhitss"
+      DATABASE_USER: "postgres"
+      POSTGRES_PASSWORD: "password123"
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - userapi-network
+
+networks:
+  userapi-network:
+    driver: bridge
