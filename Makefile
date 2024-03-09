@@ -70,7 +70,7 @@ lint:
 
 # * DOCKER * #
 ## Build all docker images
-docker-build: 
+docker-build: build
 	@echo "${.YELLOW}--- Docker: build ---${.RESET}"
 	docker build --build-arg SERVICE_NAME=$(USER_API_IMG_NAME) -t $(USER_API_IMG_NAME):latest .
 

@@ -24,5 +24,5 @@ func (u *UserQueueProducer) PublishCreate(ctx context.Context, data *User) error
 	if err != nil {
 		return err
 	}
-	return u.Producer.Publish(ctx, "user.create", buf)
+	return u.Producer.Publish(ctx, buf)
 }

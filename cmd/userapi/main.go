@@ -32,8 +32,12 @@ const (
 	QueueAutoDelete       = false
 	QueueExclusive        = false
 	QueueNoWait           = false
+
+	QueueExchangeKind     = "direct"
+	QueueExchangeInternal = false
 )
 
+// getPort returns the port to be used by the API.
 func getPort() (port string) {
 	if port = os.Getenv("PORT"); port == "" {
 		return DefaultPort
@@ -41,6 +45,7 @@ func getPort() (port string) {
 	return port
 }
 
+// getDatabaseConfig returns the configuration for the database.
 func getDatabaseConfig() *database.Postgres {
 	return &database.Postgres{
 		Host:          DatabaseHost,
@@ -55,6 +60,7 @@ func getDatabaseConfig() *database.Postgres {
 	}
 }
 
+// getQueueConfig returns the configuration for the queue.
 func getQueueConfig() *queue.Config {
 	return &queue.Config{
 		Queue: &queue.ConfigQueue{
@@ -65,6 +71,14 @@ func getQueueConfig() *queue.Config {
 			Exclusive:        QueueExclusive,
 			NoWait:           QueueNoWait,
 		},
+		Exchange: &queue.ConfigExchange{
+			Name:       QueueName,
+			Kind:       QueueExchangeKind,
+			Durable:    QueueDurable,
+			AutoDelete: QueueAutoDelete,
+			Internal:   QueueExchangeInternal,
+			NoWait:     QueueNoWait,
+		},
 		Dial: &queue.ConfigDial{
 			User:     QueueUser,
 			Password: QueuePassword,
@@ -74,6 +88,7 @@ func getQueueConfig() *queue.Config {
 	}
 }
 
+// newQueueService returns a new instance of the queue service.
 func newQueueService(repository *UserRepository) (*UserQueueService, error) {
 	cfg := getQueueConfig()
 
@@ -93,6 +108,7 @@ func newQueueService(repository *UserRepository) (*UserQueueService, error) {
 	), nil
 }
 
+// main is the entrypoint of the application.
 func main() {
 	port := getPort()
 	db := getDatabaseConfig()
@@ -108,7 +124,7 @@ func main() {
 		panic(err)
 	}
 
-	go queueService.Consumer.ConsumeCreate(context.Background())
+	go queueService.ConsumeCreate(context.Background())
 
 	service := NewUserService(repository)
 	handler := NewUserHandler(service, queueService)

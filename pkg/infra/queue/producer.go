@@ -1,6 +1,8 @@
 package queue
 
 import (
+	"context"
+
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -22,10 +24,14 @@ func NewProducer(cfg *Config) (*Producer, error) {
 	if err != nil {
 		return nil, err
 	}
+	if err = exchangeDeclare(ch, cfg.Exchange); err != nil {
+		return nil, err
+	}
 	queue, err := queueDeclare(ch, cfg.Queue)
 	if err != nil {
 		return nil, err
 	}
+
 	return &Producer{
 		Conn:    conn,
 		Channel: ch,
@@ -35,38 +41,16 @@ func NewProducer(cfg *Config) (*Producer, error) {
 }
 
 // Push (Publish) a specified message to the AMQP exchange.
-func (p *Producer) Publish(body []byte, key string) error {
-	return p.Channel.Publish(
+func (p *Producer) Publish(ctx context.Context, body []byte) error {
+	return p.Channel.PublishWithContext(
+		ctx,
 		p.config.Exchange.Name,
-		key,
+		p.config.Exchange.Key,
 		false,
 		false,
 		amqp.Publishing{
 			ContentType: "text/plain",
 			Body:        body,
 		},
-	)
-}
-
-func declareExchange(ch *amqp.Channel, cfg *ConfigQueue) error {
-	return ch.ExchangeDeclare(
-		cfg.Name,
-		cfg.Kind,
-		cfg.Durable,
-		cfg.AutoDelete,
-		cfg.Internal,
-		cfg.NoWait,
-		cfg.Args,
-	)
-}
-
-func queueDeclare(ch *amqp.Channel, cfg *ConfigQueue) (amqp.Queue, error) {
-	return ch.QueueDeclare(
-		cfg.Name,
-		cfg.Durable,
-		cfg.AutoDelete,
-		cfg.Exclusive,
-		cfg.NoWait,
-		cfg.Args,
 	)
 }

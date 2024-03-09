@@ -5,6 +5,7 @@ import (
 	"globalhitss/pkg/user"
 )
 
+// UserService provides the business logic for the user entity.
 type UserService struct {
 	Repository user.Repository
 }

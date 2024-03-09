@@ -2,6 +2,7 @@ package main
 
 import "globalhitss/pkg/user"
 
+// User DTO.
 type User struct {
 	ID         uint   `gorm:"primaryKey" json:"id,omitempty"`
 	Nome       string `json:"nome,omitempty"`
@@ -12,11 +13,13 @@ type User struct {
 	CPF        string `json:"cpf,omitempty"`
 }
 
+// Response DTO.
 type Response struct {
 	User  User   `json:"user,omitempty"`
 	Error string `json:"error,omitempty"`
 }
 
+// toUserEntity converts a User DTO to a user entity.
 func toUserEntity(dto User) (entity *user.User) {
 	return &user.User{
 		ID:         user.ID(dto.ID),
@@ -29,6 +32,7 @@ func toUserEntity(dto User) (entity *user.User) {
 	}
 }
 
+// toUserDTO converts a user entity to a User DTO.
 func toUserDTO(entity *user.User) (dto User) {
 	return User{
 		ID:         uint(entity.ID),
@@ -41,6 +45,7 @@ func toUserDTO(entity *user.User) (dto User) {
 	}
 }
 
+// toResponse converts a user entity to a Response DTO.
 func toResponse(entity *user.User) (resp Response) {
 	resp.User = toUserDTO(entity)
 	return

@@ -32,11 +32,18 @@ linters:
     - gofumpt
     - gci
     - goerr113
+    - gomodguard
     - forbidigo
     - depguard
     - exhaustruct
     - exhaustivestruct
     - nonamedreturns
+    - deadcode
+    - nosnakecase
+    - structcheck
+    - ifshort
+    - gomoddirectives
+    - varcheck
     - tagliatelle
     - wrapcheck
     - wsl

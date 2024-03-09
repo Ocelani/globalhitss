@@ -9,11 +9,10 @@ import (
 )
 
 const (
-	getUserRoute    = "/user/:id" // Route to get a user by ID.
-	postUserRoute   = "/user"     // Route to create a new user.
-	putUserRoute    = "/user/:id" // Route to update a user by ID.
-	deleteUserRoute = "/user/:id" // Route to delete a user by ID.
-
+	getUserRoute       = "/user/:id"   // Route to get a user by ID.
+	postUserRoute      = "/user"       // Route to create a new user.
+	putUserRoute       = "/user/:id"   // Route to update a user by ID.
+	deleteUserRoute    = "/user/:id"   // Route to delete a user by ID.
 	postUserQueueRoute = "/user/queue" // Route to create a new user by queue.
 )
 

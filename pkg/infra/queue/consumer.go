@@ -24,20 +24,27 @@ func NewConsumer(cfg *Config) (*Consumer, error) {
 	if err != nil {
 		return nil, err
 	}
+	if err = exchangeDeclare(ch, cfg.Exchange); err != nil {
+		return nil, err
+	}
 	queue, err := queueDeclare(ch, cfg.Queue)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Consumer{
+	consumer := &Consumer{
 		Channel: ch,
 		Conn:    conn,
 		queue:   &queue,
 		config:  cfg,
-	}, nil
+	}
+
+	err = consumer.queueBind(cfg.Exchange.Key, cfg.Exchange.Name)
+
+	return consumer, err
 }
 
-func (c *Consumer) QueueBind(key, exchange string) error {
+func (c *Consumer) queueBind(key, exchange string) error {
 	return c.Channel.QueueBind(
 		c.queue.Name,
 		key,
@@ -47,11 +54,11 @@ func (c *Consumer) QueueBind(key, exchange string) error {
 	)
 }
 
-func (c *Consumer) Consume(ctx context.Context, consumer string, autoAck, noLocal bool) (<-chan amqp.Delivery, error) {
+func (c *Consumer) Consume(ctx context.Context, autoAck, noLocal bool) (<-chan amqp.Delivery, error) {
 	return c.Channel.ConsumeWithContext(
 		ctx,
 		c.queue.Name,
-		consumer,
+		c.config.Exchange.Key,
 		autoAck,
 		c.config.Queue.Exclusive,
 		noLocal,

@@ -99,6 +99,7 @@ func (h *UserHandler) Delete(ctx fiber.Ctx) error {
 	})
 }
 
+// PostQueue creates a new user by queue.
 func (h *UserHandler) PostQueue(ctx fiber.Ctx) error {
 	var dto User
 	if err := json.Unmarshal(ctx.Body(), &dto); err != nil {
