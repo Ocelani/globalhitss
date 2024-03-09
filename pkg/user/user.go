@@ -20,16 +20,16 @@ type User struct {
 
 // Repository is the interface that wraps the methods of the User repository.
 type Repository interface {
-	Create(context.Context, *User) error
-	ReadOne(context.Context, ID) (*User, error)
-	Update(context.Context, *User) error
-	Delete(context.Context, ID) error
+	Create(ctx context.Context, data *User) error
+	ReadOne(ctx context.Context, id ID) (*User, error)
+	Update(ctx context.Context, data *User) error
+	Delete(ctx context.Context, id ID) error
 }
 
 // Service is the interface that wraps the methods of the User service.
 type Service interface {
-	Register(context.Context, *User) error
-	FindOne(context.Context, ID) (*User, error)
-	Update(context.Context, ID, *User) error
-	Remove(context.Context, ID) error
+	Register(ctx context.Context, data *User) error
+	FindOne(ctx context.Context, id ID) (*User, error)
+	Update(ctx context.Context, id ID, data *User) error
+	Remove(ctx context.Context, id ID) error
 }

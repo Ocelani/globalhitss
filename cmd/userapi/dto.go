@@ -4,7 +4,7 @@ import "globalhitss/pkg/user"
 
 // User DTO.
 type User struct {
-	ID         uint   `gorm:"primaryKey" json:"id,omitempty"`
+	ID         uint   `gorm:"primaryKey"           json:"id,omitempty"`
 	Nome       string `json:"nome,omitempty"`
 	Sobrenome  string `json:"sobrenome,omitempty"`
 	Contato    string `json:"contato,omitempty"`

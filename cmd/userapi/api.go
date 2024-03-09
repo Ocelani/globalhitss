@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/logger"
@@ -50,7 +48,7 @@ func (a *API) Setup() {
 // Listen and serve the API service.
 func (a *API) Listen(port string) error {
 	defer a.close()
-	return a.Server.Listen(fmt.Sprintf(":%s", port))
+	return a.Server.Listen(":" + port)
 }
 
 // close API service.
