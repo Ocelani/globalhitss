@@ -40,7 +40,7 @@ tidy:
 	go mod tidy -compat=$(GOVERSION)
 
 ## Build binary
-build: 
+build: tidy
 	@echo "${.YELLOW}--- Go: build ---${.RESET}"
 	mkdir -p $(BIN_DIR)
 	GOOS=$(GOOS) GOARCH=$(GOARCH) GO111MODULE=$(GO111MODULE) CGO_ENABLED=$(CGO_ENABLED) go build -o $(BIN_DIR) ./cmd/userapi
@@ -51,6 +51,11 @@ build-dev:
 	mkdir -p $(BIN_DIR)
 	go build -o $(BIN_DIR) ./cmd/userapi
 
+## Run Go binary
+run: docker-up
+	@echo "${.YELLOW}--- Go: run ---${.RESET}"
+	$(BIN_DIR)/userapi
+
 ## Run Go unit tests
 tests: 
 	@echo "${.YELLOW}--- Go: tests ---${.RESET}"
@@ -60,6 +65,11 @@ tests:
 tests-integration: 
 	@echo "${.YELLOW}--- Go: tests ---${.RESET}"
 	go test -tags e2e -v -race ./...
+
+## Run Go integration tests
+tests-script: 
+	@echo "${.YELLOW}--- Manual tests script ---${.RESET}"
+	./scripts/tests.sh
 
 ## Lint Go code
 lint: 

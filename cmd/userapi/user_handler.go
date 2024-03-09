@@ -11,12 +11,12 @@ import (
 
 // UserHandler is the handler for the user.
 type UserHandler struct {
-	Service *UserService
+	Service user.Service
 	Queue   *UserQueueService
 }
 
 // NewUserHandler returns a new instance of the default repository.
-func NewUserHandler(service *UserService, queue *UserQueueService) *UserHandler {
+func NewUserHandler(service user.Service, queue *UserQueueService) *UserHandler {
 	return &UserHandler{
 		Service: service,
 		Queue:   queue,

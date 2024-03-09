@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"globalhitss/pkg/infra/queue"
+	"globalhitss/pkg/user"
 
 	"github.com/gofiber/fiber/v3/log"
 	"github.com/rabbitmq/amqp091-go"
@@ -13,11 +14,11 @@ import (
 // UserQueueConsumer consumes messages from the user-create queue.
 type UserQueueConsumer struct {
 	Consumer   *queue.Consumer
-	Repository *UserRepository
+	Repository user.Repository
 }
 
 // NewUserQueueConsumer returns a new UserQueueConsumer.
-func NewUserQueueConsumer(consumer *queue.Consumer, repository *UserRepository) *UserQueueConsumer {
+func NewUserQueueConsumer(consumer *queue.Consumer, repository user.Repository) *UserQueueConsumer {
 	return &UserQueueConsumer{
 		Consumer:   consumer,
 		Repository: repository,

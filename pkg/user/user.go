@@ -28,8 +28,8 @@ type Repository interface {
 
 // Service is the interface that wraps the methods of the User service.
 type Service interface {
-	Register(ctx context.Context, data *User) error
-	FindOne(ctx context.Context, id ID) (*User, error)
+	Create(ctx context.Context, data *User) error
+	ReadOne(ctx context.Context, id ID) (*User, error)
 	Update(ctx context.Context, id ID, data *User) error
-	Remove(ctx context.Context, id ID) error
+	Delete(ctx context.Context, id ID) error
 }
